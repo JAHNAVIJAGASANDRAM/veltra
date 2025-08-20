@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import OnboardingWizard from "./components/OnboardingWizard";
 import IndividualDashboard from "./components/IndividualDashboard";
 import TeamDashboard from "./components/TeamDashboard";
+import MainDashboard from "./components/dashboard/MainDashboard";
 import InteractiveGuide from "./components/InteractiveGuide";
 
 function App() {
@@ -120,11 +121,8 @@ function App() {
         </>
       )}
 
-      {!isHome && context?.type === "individual" && (
-        <IndividualDashboard onShowGuide={() => setShowGuide(true)} />
-      )}
-      {!isHome && context?.type === "team" && (
-        <TeamDashboard onShowGuide={() => setShowGuide(true)} team={context.team} />
+      {!isHome && (
+        <MainDashboard context={context} onShowGuide={() => setShowGuide(true)} />
       )}
 
       {showWizard && (
