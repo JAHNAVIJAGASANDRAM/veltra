@@ -67,17 +67,7 @@ function App() {
             </div>
           </section>
 
-          {/* How Veltra Works Section */}
-          <section id="how" className="py-16 px-6 bg-gray-100">
-            <h2 className="text-3xl font-bold text-center mb-8">How Veltra Works</h2>
-            <div className="flex flex-col items-center space-y-4">
-              <WorkflowStep step="Team Registration" />
-              <WorkflowStep step="Task Assignment" />
-              <WorkflowStep step="Work in Progress" />
-              <WorkflowStep step="Review & Approval" />
-              <WorkflowStep step="Publishing" />
-            </div>
-          </section>
+          
 
           {/* Why Veltra Section */}
           <section id="why" className="py-16 px-6">
@@ -148,15 +138,6 @@ function FeatureCard({ title, description }) {
   );
 }
 
-function WorkflowStep({ step }) {
-  return (
-    <div className="flex items-center space-x-4">
-      <div className="w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center">
-        ✓
-      </div>
-      <p>{step}</p>
-    </div>
-  );
-}
+ 
 
 export default App;
