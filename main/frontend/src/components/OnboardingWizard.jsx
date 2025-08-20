@@ -10,6 +10,8 @@ export default function OnboardingWizard({ onClose, onComplete }) {
   const [usage, setUsage] = useState(null); // "individual" | "team"
   const [teamName, setTeamName] = useState("");
   const [members, setMembers] = useState(""); // comma-separated emails
+  const [availableRoles, setAvailableRoles] = useState(["Creator","Team Manager","Research","Editor","Analyst","Publisher"]);
+  const [defaultTeamRole, setDefaultTeamRole] = useState("Creator");
 
   function handleAuthContinue() {
     if (!name || !email) {
@@ -45,7 +47,7 @@ export default function OnboardingWizard({ onClose, onComplete }) {
       .split(',')
       .map(m => m.trim())
       .filter(Boolean)
-      .map(email => ({ email, role: "Creator" }));
+      .map(email => ({ email, role: defaultTeamRole || "Creator" }));
 
     onComplete({
       type: "team",
@@ -68,14 +70,30 @@ export default function OnboardingWizard({ onClose, onComplete }) {
               <input className="border rounded px-3 py-2" placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
               <input className="border rounded px-3 py-2" placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <select className="border rounded px-3 py-2" value={role} onChange={e => setRole(e.target.value)}>
+                <select
+                  className="border rounded px-3 py-2"
+                  value={role}
+                  onChange={e => {
+                    const value = e.target.value;
+                    if (value === "__custom") {
+                      const custom = prompt('Enter a custom role');
+                      if (custom && custom.trim()) {
+                        const next = custom.trim();
+                        if (!availableRoles.includes(next)) setAvailableRoles(prev => [...prev, next]);
+                        setRole(next);
+                      } else {
+                        setRole("");
+                      }
+                    } else {
+                      setRole(value);
+                    }
+                  }}
+                >
                   <option value="">Select role</option>
-                  <option>Creator</option>
-                  <option>Team Manager</option>
-                  <option>Research</option>
-                  <option>Editor</option>
-                  <option>Analyst</option>
-                  <option>Publisher</option>
+                  {availableRoles.map(r => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                  <option value="__custom">+ Add custom role…</option>
                 </select>
                 <input className="border rounded px-3 py-2 md:col-span-2" placeholder="Organization (optional)" value={organization} onChange={e => setOrganization(e.target.value)} />
               </div>
@@ -144,6 +162,31 @@ export default function OnboardingWizard({ onClose, onComplete }) {
             <div className="grid grid-cols-1 gap-4 mb-4">
               <input className="border rounded px-3 py-2" placeholder="Team / Organization name" value={teamName} onChange={e => setTeamName(e.target.value)} />
               <textarea className="border rounded px-3 py-2" placeholder="Invite members (emails, comma-separated)" rows={3} value={members} onChange={e => setMembers(e.target.value)} />
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-700">Default role for invites:</label>
+                <select
+                  className="border rounded px-3 py-2"
+                  value={defaultTeamRole}
+                  onChange={e => {
+                    const value = e.target.value;
+                    if (value === "__custom") {
+                      const custom = prompt('Enter a custom role');
+                      if (custom && custom.trim()) {
+                        const next = custom.trim();
+                        if (!availableRoles.includes(next)) setAvailableRoles(prev => [...prev, next]);
+                        setDefaultTeamRole(next);
+                      }
+                    } else {
+                      setDefaultTeamRole(value);
+                    }
+                  }}
+                >
+                  {availableRoles.map(r => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                  <option value="__custom">+ Add custom role…</option>
+                </select>
+              </div>
             </div>
             <div className="text-sm text-gray-600 mb-6">
               Default roles will be assigned. You can adjust later (Admin, Creator, Editor, Researcher, Analyst, Publisher).
