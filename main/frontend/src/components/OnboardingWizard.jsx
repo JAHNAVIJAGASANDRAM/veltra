@@ -58,20 +58,20 @@ export default function OnboardingWizard({ onClose, onComplete }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 modal-overlay flex items-center justify-center">
       <div className="absolute inset-0 bg-black/50" onClick={onClose} />
-      <div className="relative w-full max-w-2xl bg-white rounded-lg shadow-xl p-6">
+      <div className="modal-content relative w-full max-w-2xl p-8">
         {step === "auth" && (
-          <div>
-            <h2 className="text-2xl font-bold mb-2">Create your account</h2>
-            <p className="text-gray-600 mb-6">Sign up to get started with Veltra</p>
-            <div className="grid grid-cols-1 gap-4 mb-4">
-              <input className="border rounded px-3 py-2" placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
-              <input className="border rounded px-3 py-2" placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
-              <input className="border rounded px-3 py-2" placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <div className="animate-fade-in-up">
+            <h2 className="heading-2 mb-4">Create your account</h2>
+            <p className="text-gray-600 mb-8 text-lg">Sign up to get started with Veltra</p>
+            <div className="grid grid-cols-1 gap-6 mb-6">
+              <input className="modern-input" placeholder="Name" value={name} onChange={e => setName(e.target.value)} />
+              <input className="modern-input" placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+              <input className="modern-input" placeholder="Password" type="password" value={password} onChange={e => setPassword(e.target.value)} />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <select
-                  className="border rounded px-3 py-2"
+                  className="modern-input"
                   value={role}
                   onChange={e => {
                     const value = e.target.value;
@@ -95,77 +95,88 @@ export default function OnboardingWizard({ onClose, onComplete }) {
                   ))}
                   <option value="__custom">+ Add custom role…</option>
                 </select>
-                <input className="border rounded px-3 py-2 md:col-span-2" placeholder="Organization (optional)" value={organization} onChange={e => setOrganization(e.target.value)} />
+                <input className="modern-input md:col-span-2" placeholder="Organization (optional)" value={organization} onChange={e => setOrganization(e.target.value)} />
               </div>
             </div>
 
-            <div className="flex items-center gap-3 mb-6">
-              <button className="flex-1 border rounded px-3 py-2 hover:bg-gray-50">Continue with Google</button>
-              <button className="flex-1 border rounded px-3 py-2 hover:bg-gray-50">GitHub</button>
-              <button className="flex-1 border rounded px-3 py-2 hover:bg-gray-50">LinkedIn</button>
+            <div className="flex items-center gap-4 mb-8">
+              <button className="btn-secondary flex-1">Continue with Google</button>
+              <button className="btn-secondary flex-1">GitHub</button>
+              <button className="btn-secondary flex-1">LinkedIn</button>
             </div>
 
-            <div className="flex justify-end gap-3">
-              <button className="px-4 py-2" onClick={onClose}>Cancel</button>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={handleAuthContinue}>Continue</button>
+            <div className="flex justify-end gap-4">
+              <button className="btn-secondary" onClick={onClose}>Cancel</button>
+              <button className="btn-primary" onClick={handleAuthContinue}>Continue</button>
             </div>
           </div>
         )}
 
         {step === "usage" && (
-          <div>
-            <h2 className="text-2xl font-bold mb-2">How will you use Veltra?</h2>
-            <p className="text-gray-600 mb-6">Choose the setup that fits you best.</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-              <button onClick={() => setUsage("individual")} className={`border rounded p-4 text-left hover:border-blue-500 ${usage === "individual" ? "border-blue-500 ring-2 ring-blue-200" : ""}`}>
-                <h3 className="font-bold mb-1">I'm an Individual Creator</h3>
-                <p className="text-sm text-gray-600">Get a personal dashboard with calendar, tasks, and drafts.</p>
+          <div className="animate-fade-in-up">
+            <h2 className="heading-2 mb-4">How will you use Veltra?</h2>
+            <p className="text-gray-600 mb-8 text-lg">Choose the setup that fits you best.</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <button onClick={() => setUsage("individual")} className={`modern-card p-6 text-left transition-all duration-300 ${usage === "individual" ? "ring-2 ring-blue-500 bg-blue-50" : ""}`}>
+                <h3 className="heading-3 mb-3">I'm an Individual Creator</h3>
+                <p className="text-gray-600">Get a personal dashboard with calendar, tasks, and drafts.</p>
               </button>
-              <button onClick={() => setUsage("team")} className={`border rounded p-4 text-left hover:border-blue-500 ${usage === "team" ? "border-blue-500 ring-2 ring-blue-200" : ""}`}>
-                <h3 className="font-bold mb-1">I'm a Team / Organization</h3>
-                <p className="text-sm text-gray-600">Launch a team workspace with boards and calendars.</p>
+              <button onClick={() => setUsage("team")} className={`modern-card p-6 text-left transition-all duration-300 ${usage === "team" ? "ring-2 ring-blue-500 bg-blue-50" : ""}`}>
+                <h3 className="heading-3 mb-3">I'm a Team / Organization</h3>
+                <p className="text-gray-600">Launch a team workspace with boards and calendars.</p>
               </button>
             </div>
             <div className="flex justify-between">
-              <button className="px-4 py-2" onClick={() => setStep("auth")}>Back</button>
-              <div className="flex gap-3">
-                <button className="px-4 py-2" onClick={onClose}>Cancel</button>
-                <button disabled={!usage} className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50" onClick={handleUsageContinue}>Continue</button>
+              <button className="btn-secondary" onClick={() => setStep("auth")}>Back</button>
+              <div className="flex gap-4">
+                <button className="btn-secondary" onClick={onClose}>Cancel</button>
+                <button disabled={!usage} className="btn-primary disabled:opacity-50" onClick={handleUsageContinue}>Continue</button>
               </div>
             </div>
           </div>
         )}
 
         {step === "individual-setup" && (
-          <div>
-            <h2 className="text-2xl font-bold mb-2">Personal Creator Setup</h2>
-            <p className="text-gray-600 mb-6">We'll create a default workspace with Content Calendar, Task Tracker, and Draft Box.</p>
-            <ul className="list-disc list-inside text-gray-700 mb-6">
-              <li>Content Calendar (empty but ready)</li>
-              <li>Task Tracker (personal)</li>
-              <li>Draft Box (ideas & drafts)</li>
-            </ul>
+          <div className="animate-fade-in-up">
+            <h2 className="heading-2 mb-4">Personal Creator Setup</h2>
+            <p className="text-gray-600 mb-8 text-lg">We'll create a default workspace with Content Calendar, Task Tracker, and Draft Box.</p>
+            <div className="modern-card p-6 mb-8">
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-3"></span>
+                  Content Calendar (empty but ready)
+                </li>
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-green-500 rounded-full mr-3"></span>
+                  Task Tracker (personal)
+                </li>
+                <li className="flex items-center">
+                  <span className="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                  Draft Box (ideas & drafts)
+                </li>
+              </ul>
+            </div>
             <div className="flex justify-between">
-              <button className="px-4 py-2" onClick={() => setStep("usage")}>Back</button>
-              <div className="flex gap-3">
-                <button className="px-4 py-2" onClick={onClose}>Cancel</button>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={handleIndividualCreate}>Create my workspace</button>
+              <button className="btn-secondary" onClick={() => setStep("usage")}>Back</button>
+              <div className="flex gap-4">
+                <button className="btn-secondary" onClick={onClose}>Cancel</button>
+                <button className="btn-primary" onClick={handleIndividualCreate}>Create my workspace</button>
               </div>
             </div>
           </div>
         )}
 
         {step === "team-setup" && (
-          <div>
-            <h2 className="text-2xl font-bold mb-2">Team Workspace Setup</h2>
-            <p className="text-gray-600 mb-6">Name your organization, add members, and we'll set up roles and dashboards.</p>
-            <div className="grid grid-cols-1 gap-4 mb-4">
-              <input className="border rounded px-3 py-2" placeholder="Team / Organization name" value={teamName} onChange={e => setTeamName(e.target.value)} />
-              <textarea className="border rounded px-3 py-2" placeholder="Invite members (emails, comma-separated)" rows={3} value={members} onChange={e => setMembers(e.target.value)} />
-              <div className="flex items-center gap-2">
-                <label className="text-sm text-gray-700">Default role for invites:</label>
+          <div className="animate-fade-in-up">
+            <h2 className="heading-2 mb-4">Team Workspace Setup</h2>
+            <p className="text-gray-600 mb-8 text-lg">Name your organization, add members, and we'll set up roles and dashboards.</p>
+            <div className="grid grid-cols-1 gap-6 mb-6">
+              <input className="modern-input" placeholder="Team / Organization name" value={teamName} onChange={e => setTeamName(e.target.value)} />
+              <textarea className="modern-input" placeholder="Invite members (emails, comma-separated)" rows={3} value={members} onChange={e => setMembers(e.target.value)} />
+              <div className="flex items-center gap-4">
+                <label className="text-sm text-gray-700 font-medium">Default role for invites:</label>
                 <select
-                  className="border rounded px-3 py-2"
+                  className="modern-input flex-1"
                   value={defaultTeamRole}
                   onChange={e => {
                     const value = e.target.value;
@@ -188,14 +199,16 @@ export default function OnboardingWizard({ onClose, onComplete }) {
                 </select>
               </div>
             </div>
-            <div className="text-sm text-gray-600 mb-6">
-              Default roles will be assigned. You can adjust later (Admin, Creator, Editor, Researcher, Analyst, Publisher).
+            <div className="modern-card p-4 mb-8">
+              <p className="text-sm text-gray-600">
+                Default roles will be assigned. You can adjust later (Admin, Creator, Editor, Researcher, Analyst, Publisher).
+              </p>
             </div>
             <div className="flex justify-between">
-              <button className="px-4 py-2" onClick={() => setStep("usage")}>Back</button>
-              <div className="flex gap-3">
-                <button className="px-4 py-2" onClick={onClose}>Cancel</button>
-                <button className="bg-blue-600 text-white px-4 py-2 rounded" onClick={handleTeamCreate}>Create team workspace</button>
+              <button className="btn-secondary" onClick={() => setStep("usage")}>Back</button>
+              <div className="flex gap-4">
+                <button className="btn-secondary" onClick={onClose}>Cancel</button>
+                <button className="btn-primary" onClick={handleTeamCreate}>Create team workspace</button>
               </div>
             </div>
           </div>

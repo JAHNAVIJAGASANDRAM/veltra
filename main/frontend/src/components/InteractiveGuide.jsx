@@ -31,14 +31,14 @@ export default function InteractiveGuide({ contextType, onClose }) {
   const rect = target ? target.getBoundingClientRect() : null;
 
   return (
-    <div className="fixed inset-0 z-[60] pointer-events-none">
+    <div className="fixed inset-0 guide-overlay pointer-events-none">
       {/* Overlay */}
       <div className="absolute inset-0 bg-black/40" />
 
       {/* Tooltip */}
       {rect && (
         <div
-          className="absolute bg-white rounded shadow-xl p-4 w-72 pointer-events-auto"
+          className="absolute bg-white rounded shadow-xl p-4 w-72 pointer-events-auto z-70"
           style={{ top: Math.max(16, rect.bottom + window.scrollY + 8), left: Math.min(window.innerWidth - 300, rect.left + window.scrollX) }}
         >
           <div className="font-semibold mb-1">{current.title}</div>
