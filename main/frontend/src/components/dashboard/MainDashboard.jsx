@@ -17,6 +17,7 @@ const STORAGE_KEY = "veltra_state_v1";
 export default function MainDashboard({ context, onShowGuide }) {
   const [activeTab, setActiveTab] = useState("overview");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(true); // Start as initialized
 
   // App state (mocked client-side for now)
   const [tasks, setTasks] = useState([]);
@@ -43,6 +44,39 @@ export default function MainDashboard({ context, onShowGuide }) {
       if (parsed.team) setTeam(parsed.team);
     } catch {}
   }, []);
+
+  // Ensure we always start with overview tab
+  useEffect(() => {
+    console.log("MainDashboard mounted, setting activeTab to overview");
+    console.log("Context:", context);
+    console.log("Component state:", { activeTab, isInitialized });
+    
+    // Clear any potential localStorage that might be causing issues
+    localStorage.removeItem("veltra_active_tab");
+    localStorage.removeItem("veltra_tab");
+    
+    // Check for URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const tabParam = urlParams.get('tab');
+    console.log("URL tab parameter:", tabParam);
+    
+    // Force overview tab regardless of any parameters
+    setActiveTab("overview");
+    
+    console.log("MainDashboard initialization complete");
+  }, []);
+
+  // Fallback: ensure activeTab is always valid
+  const validTabs = ["overview", "tasks", "content", "calendar", "research", "collab", "workflows", "files", "profile"];
+  const currentTab = validTabs.includes(activeTab) ? activeTab : "overview";
+  
+  // Extra safeguard: if not initialized, force overview
+  const displayTab = !isInitialized ? "overview" : currentTab;
+
+  // Debug: Log activeTab changes
+  useEffect(() => {
+    console.log("Active tab changed to:", activeTab);
+  }, [activeTab]);
 
   // Persist on change
   useEffect(() => {
@@ -124,117 +158,272 @@ export default function MainDashboard({ context, onShowGuide }) {
   }
 
   return (
-    <div className="flex-1">
-      <header className="px-6 py-4 border-b bg-white flex items-center justify-between">
+    <div className="flex-1 relative dashboard-content main-content">
+      <header className="modern-header px-8 py-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">{context?.type === "team" ? (team?.name || "Team Workspace") : "Creator Workspace"}</h1>
-          <p className="text-gray-500 text-sm">Welcome back{context?.user?.name ? `, ${context.user.name}` : ""}.</p>
+          <h1 className="heading-2 mb-2">{context?.type === "team" ? (team?.name || "Team Workspace") : "Creator Workspace"}</h1>
+          <p className="text-gray-600 text-lg">Welcome back{context?.user?.name ? `, ${context.user.name}` : ""}.</p>
         </div>
-        <div className="flex items-center gap-2">
-          <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("overview")}>Overview</button>
-          <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("tasks")}>Tasks</button>
-          <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("content")}>Content</button>
-          <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("calendar")}>Calendar</button>
-          <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("research")}>Research</button>
-          <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("collab")}>Collaboration</button>
-          <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("workflows")}>Workflows</button>
-          <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("files")}>Files</button>
-          <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("profile")}>Profile</button>
-          <button className="border px-3 py-2 rounded" onClick={() => setIsSearchOpen(true)}>Search (Ctrl+K)</button>
-          <button className="text-sm bg-blue-600 text-white px-3 py-2 rounded" onClick={onShowGuide}>Show Guide</button>
+        <div className="flex items-center gap-4">
+          <button 
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === "overview" 
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 transform scale-105" 
+                : "btn-secondary"
+            }`} 
+            onClick={() => setActiveTab("overview")}
+          >
+            Overview
+          </button>
+          <button 
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === "tasks" 
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 transform scale-105" 
+                : "btn-secondary"
+            }`} 
+            onClick={() => setActiveTab("tasks")}
+          >
+            Tasks
+          </button>
+          <button 
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === "content" 
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 transform scale-105" 
+                : "btn-secondary"
+            }`} 
+            onClick={() => setActiveTab("content")}
+          >
+            Content
+          </button>
+          <button 
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === "calendar" 
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 transform scale-105" 
+                : "btn-secondary"
+            }`} 
+            onClick={() => setActiveTab("calendar")}
+          >
+            Calendar
+          </button>
+          <button 
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === "research" 
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 transform scale-105" 
+                : "btn-secondary"
+            }`} 
+            onClick={() => setActiveTab("research")}
+          >
+            Research
+          </button>
+          <button 
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === "collab" 
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 transform scale-105" 
+                : "btn-secondary"
+            }`} 
+            onClick={() => setActiveTab("collab")}
+          >
+            Collaboration
+          </button>
+          <button 
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === "workflows" 
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 transform scale-105" 
+                : "btn-secondary"
+            }`} 
+            onClick={() => setActiveTab("workflows")}
+          >
+            Workflows
+          </button>
+          <button 
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === "files" 
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 transform scale-105" 
+                : "btn-secondary"
+            }`} 
+            onClick={() => setActiveTab("files")}
+          >
+            Files
+          </button>
+          <button 
+            className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              activeTab === "profile" 
+                ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-200 transform scale-105" 
+                : "btn-secondary"
+            }`} 
+            onClick={() => setActiveTab("profile")}
+          >
+            Profile
+          </button>
+          <button className="btn-secondary" onClick={() => setIsSearchOpen(true)}>Search (Ctrl+K)</button>
+          <button className="btn-primary" onClick={onShowGuide}>Show Guide</button>
         </div>
       </header>
 
-      {activeTab === "overview" && (
-        <main className="p-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
-          <section className="bg-white rounded shadow p-4 lg:col-span-2">
-            <h2 className="font-semibold mb-2">Tasks</h2>
-            <div className="text-sm text-gray-700">To-Do: {stats.todo} • In Progress: {stats.inprogress} • Review: {stats.review} • Done: {stats.done}</div>
-            <div className="mt-3 flex gap-2">
-              <button className="bg-blue-600 text-white px-3 py-2 rounded" onClick={() => setActiveTab("tasks")}>Open Tasks</button>
-              <button className="border px-3 py-2 rounded" onClick={() => {
-                const task = sampleTask();
-                setTasks(prev => [...prev, task]);
-                addActivity({ action: 'task:create', target: { type: 'task', id: task.id, title: task.title } });
-              }}>Create Task</button>
+      {/* Active Tab Indicator */}
+      <div className="px-8 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100 relative z-10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+            <div className="text-sm font-semibold text-blue-800">
+              Current tab: <span className="font-bold text-blue-900">{displayTab}</span>
             </div>
-          </section>
-          <section className="bg-white rounded shadow p-4 lg:col-span-2">
-            <h2 className="font-semibold mb-2">Content Calendar</h2>
-            <div className="text-sm text-gray-700">Upcoming: {stats.upcoming}</div>
-            <div className="mt-3 flex gap-2">
-              <button className="bg-blue-600 text-white px-3 py-2 rounded" onClick={() => setActiveTab("calendar")}>Open Calendar</button>
-              <button className="border px-3 py-2 rounded" onClick={() => {
-                const ev = sampleEvent();
-                setEvents(prev => [...prev, ev]);
-                addActivity({ action: 'calendar:add', target: { type: 'event', id: ev.id, title: ev.title }, metadata: { date: ev.date } });
-              }}>Schedule Post</button>
-            </div>
-          </section>
-          <section className="bg-white rounded shadow p-4 lg:col-span-3">
-            <h2 className="font-semibold mb-2">Enhanced Notifications</h2>
-            <EnhancedNotifications notifications={notifications} onActivity={addActivity} />
-          </section>
-          <section className="bg-white rounded shadow p-4 lg:col-span-1">
-            <h2 className="font-semibold mb-2">Quick Actions</h2>
-            <div className="flex flex-col gap-2">
-              <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("tasks")}>Assign Work</button>
-              <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("content")}>Upload Draft</button>
-              <button className="border px-3 py-2 rounded" onClick={() => setActiveTab("calendar")}>Schedule Post</button>
-            </div>
-          </section>
-        </main>
-      )}
+          </div>
+          <div className="text-xs text-blue-600 bg-blue-100 px-4 py-2 rounded-full font-medium">
+            Component: MainDashboard • Active: {activeTab} • Display: {displayTab} • Init: {isInitialized ? '✓' : '⏳'}
+          </div>
+        </div>
+      </div>
 
-      {activeTab === "tasks" && (
-        <KanbanBoard tasks={tasks} setTasks={setTasks} team={team} comments={comments} setComments={setComments} onActivity={addActivity} />
-      )}
+      <div className="relative z-0 bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen dashboard-section">
+        {displayTab === "overview" && (
+            <main className="p-8 grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+              <div className="modern-card p-8 lg:col-span-2">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-white font-bold text-xl mr-4">
+                    📋
+                  </div>
+                  <h2 className="heading-3">Tasks</h2>
+                </div>
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-6 border border-blue-200">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-blue-600">{stats.todo}</div>
+                      <div className="text-sm text-blue-700">To-Do</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-yellow-600">{stats.inprogress}</div>
+                      <div className="text-sm text-yellow-700">In Progress</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-orange-600">{stats.review}</div>
+                      <div className="text-sm text-orange-700">Review</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-green-600">{stats.done}</div>
+                      <div className="text-sm text-green-700">Done</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <button className="btn-primary" onClick={() => setActiveTab("tasks")}>
+                    Open Tasks
+                  </button>
+                  <button className="btn-secondary" onClick={() => {
+                    const task = sampleTask();
+                    setTasks(prev => [...prev, task]);
+                    addActivity({ action: 'task:create', target: { type: 'task', id: task.id, title: task.title } });
+                  }}>
+                    Create Task
+                  </button>
+                </div>
+              </div>
+              
+              <div className="modern-card p-8 lg:col-span-2">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xl mr-4">
+                    📅
+                  </div>
+                  <h2 className="heading-3">Content Calendar</h2>
+                </div>
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 mb-6 border border-purple-200">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold text-purple-600 mb-2">{stats.upcoming}</div>
+                    <div className="text-purple-700 font-medium">Upcoming Events</div>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <button className="btn-primary" onClick={() => setActiveTab("calendar")}>
+                    Open Calendar
+                  </button>
+                  <button className="btn-secondary" onClick={() => {
+                    const ev = sampleEvent();
+                    setEvents(prev => [...prev, ev]);
+                    addActivity({ action: 'calendar:add', target: { type: 'event', id: ev.id, title: ev.title }, metadata: { date: ev.date } });
+                  }}>
+                    Schedule Post
+                  </button>
+                </div>
+              </div>
+              
+              <div className="modern-card p-8 lg:col-span-3">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center text-white font-bold text-xl mr-4">
+                    🔔
+                  </div>
+                  <h2 className="heading-3">Enhanced Notifications</h2>
+                </div>
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200">
+                  <EnhancedNotifications notifications={notifications} onActivity={addActivity} />
+                </div>
+              </div>
+              
+              <div className="modern-card p-8 lg:col-span-1">
+                <div className="flex items-center mb-6">
+                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-white font-bold text-xl mr-4">
+                    ⚡
+                  </div>
+                  <h2 className="heading-3">Quick Actions</h2>
+                </div>
+                <div className="flex flex-col gap-4">
+                  <button className="w-full btn-primary" onClick={() => setActiveTab("tasks")}>
+                    Assign Work
+                  </button>
+                  <button className="w-full btn-secondary" onClick={() => setActiveTab("content")}>
+                    Upload Draft
+                  </button>
+                  <button className="w-full btn-secondary" onClick={() => setActiveTab("calendar")}>
+                    Schedule Post
+                  </button>
+                </div>
+              </div>
+            </main>
+          )}
 
-      {activeTab === "content" && (
-        <ContentHub drafts={drafts} setDrafts={setDrafts} comments={comments} setComments={setComments} onActivity={addActivity} />
-      )}
+          {displayTab === "tasks" && (
+            <KanbanBoard tasks={tasks} setTasks={setTasks} team={team} comments={comments} setComments={setComments} onActivity={addActivity} />
+          )}
 
-      {activeTab === "calendar" && (
-        <PublishingCalendar events={events} setEvents={setEvents} onActivity={addActivity} />
-      )}
+          {displayTab === "content" && (
+            <ContentHub drafts={drafts} setDrafts={setDrafts} comments={comments} setComments={setComments} onActivity={addActivity} />
+          )}
 
-      {activeTab === "research" && (
-        <ResearchAnalysis resources={resources} setResources={setResources} onActivity={addActivity} />
-      )}
+          {displayTab === "calendar" && (
+            <PublishingCalendar events={events} setEvents={setEvents} onActivity={addActivity} />
+          )}
 
-      {activeTab === "collab" && (
-        <>
-          <TeamCollaboration team={team} activity={activity} />
-        </>
-      )}
+          {displayTab === "research" && (
+            <ResearchAnalysis resources={resources} setResources={setResources} onActivity={addActivity} />
+          )}
 
-      {activeTab === "workflows" && (
-        <CustomWorkflowBuilder workflows={workflows} setWorkflows={setWorkflows} onActivity={addActivity} />
-      )}
+          {displayTab === "collab" && (
+            <>
+              <TeamCollaboration team={team} activity={activity} />
+            </>
+          )}
 
-      {activeTab === "files" && (
-        <FileUploads attachments={files} setAttachments={setFiles} onActivity={addActivity} />
-      )}
+          {displayTab === "workflows" && (
+            <CustomWorkflowBuilder workflows={workflows} setWorkflows={setWorkflows} onActivity={addActivity} />
+          )}
 
-      {activeTab === "profile" && (
-        <ProfileSettings context={context} team={team} setTeam={setTeam} />
-      )}
+          {displayTab === "files" && (
+            <FileUploads attachments={files} setAttachments={setFiles} onActivity={addActivity} />
+          )}
 
-      {isSearchOpen && (
-        <SearchModal
-          open={isSearchOpen}
-          onClose={() => setIsSearchOpen(false)}
-          data={{ tasks, drafts, events, resources }}
-        />
-      )}
+          {displayTab === "profile" && (
+            <ProfileSettings context={context} team={team} setTeam={setTeam} />
+          )}
 
-      {/* Assuming showGuide is defined elsewhere or removed if not needed */}
-      {/* {showGuide && (
-        <InteractiveGuide
-          contextType={context?.type || "home"}
-          onClose={() => setShowGuide(false)}
-        />
-      )} */}
+          {isSearchOpen && (
+            <SearchModal
+              open={isSearchOpen}
+              onClose={() => setIsSearchOpen(false)}
+              data={{ tasks, drafts, events, resources }}
+            />
+          )}
+        </div>
+
+      {/* Note: Guide functionality is handled by the parent App component */}
     </div>
   );
 }

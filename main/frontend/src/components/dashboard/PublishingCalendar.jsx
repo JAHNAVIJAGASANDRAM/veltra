@@ -76,132 +76,144 @@ export default function PublishingCalendar({ events, setEvents, onActivity }) {
   }
 
   return (
-    <main className="p-6">
-      <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Content Calendar</h2>
-        <button 
-          className="bg-blue-600 text-white px-4 py-2 rounded" 
-          onClick={() => setShowAddForm(!showAddForm)}
-        >
-          {showAddForm ? 'Cancel' : 'Schedule Post'}
-        </button>
+    <main className="p-8 max-w-7xl mx-auto">
+      <div className="mb-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center mb-6">
+            <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-white font-bold text-xl mr-4">
+              📅
+            </div>
+            <h1 className="heading-2">Content Calendar</h1>
+          </div>
+          <button 
+            className="btn-primary" 
+            onClick={() => setShowAddForm(!showAddForm)}
+          >
+            {showAddForm ? 'Cancel' : 'Schedule Post'}
+          </button>
+        </div>
       </div>
 
       {showAddForm && (
-        <div className="bg-white rounded shadow p-4 mb-6">
-          <h3 className="font-semibold mb-3">Schedule New Content</h3>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+        <div className="modern-card p-8 mb-8">
+          <h3 className="heading-3 mb-6">Schedule New Content</h3>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <input 
-              className="border rounded px-3 py-2" 
-              placeholder="Title" 
+              className="modern-input" 
+              placeholder="Content title" 
               value={newEvent.title} 
               onChange={e => setNewEvent(prev => ({ ...prev, title: e.target.value }))} 
             />
             <input 
-              className="border rounded px-3 py-2" 
+              className="modern-input" 
               type="date" 
               value={newEvent.date} 
               onChange={e => setNewEvent(prev => ({ ...prev, date: e.target.value }))} 
             />
             <select 
-              className="border rounded px-3 py-2" 
+              className="modern-input" 
               value={newEvent.type} 
               onChange={e => setNewEvent(prev => ({ ...prev, type: e.target.value }))}
             >
-              {CONTENT_TYPES.map(t => (
-                <option key={t.id} value={t.id}>{t.label}</option>
+              {CONTENT_TYPES.map(type => (
+                <option key={type.id} value={type.id}>{type.label}</option>
               ))}
             </select>
-            <button 
-              className="bg-green-600 text-white px-4 py-2 rounded" 
-              onClick={addEvent}
-            >
-              Schedule
-            </button>
+            <button className="btn-primary" onClick={addEvent}>Schedule</button>
           </div>
+          <textarea 
+            className="modern-input w-full mt-4" 
+            placeholder="Description (optional)" 
+            rows={3}
+            value={newEvent.description} 
+            onChange={e => setNewEvent(prev => ({ ...prev, description: e.target.value }))} 
+          />
         </div>
       )}
 
-      <div className="bg-white rounded shadow p-4">
-        <h3 className="font-semibold mb-4">
-          {new Date(currentYear, currentMonth).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-        </h3>
-        
-        <div className="grid grid-cols-7 gap-1">
+      <div className="modern-card p-8">
+        <div className="grid grid-cols-7 gap-2 mb-4">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-            <div key={day} className="p-2 text-center text-sm font-medium text-gray-500">
+            <div key={day} className="text-center font-semibold text-gray-600 py-2">
               {day}
             </div>
           ))}
-          
-          {calendarDays.map((day, index) => {
-            if (!day) {
-              return <div key={index} className="p-2" />;
-            }
-            
-            const dateStr = day.toISOString().slice(0, 10);
-            const dayEvents = events.filter(e => e.date === dateStr);
-            const isToday = day.toDateString() === now.toDateString();
-            
-            return (
-              <div 
-                key={index} 
-                className={`p-2 min-h-[80px] border ${
-                  isToday ? 'bg-blue-50 border-blue-200' : 'border-gray-200'
-                }`}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, dateStr)}
-              >
-                <div className="text-sm font-medium mb-1">
-                  {day.getDate()}
-                  {isToday && <span className="ml-1 text-blue-600">•</span>}
-                </div>
-                
-                <div className="space-y-1">
-                  {dayEvents.map(event => (
-                    <div
-                      key={event.id}
-                      draggable
-                      onDragStart={(e) => handleDragStart(e, event)}
-                      className={`p-1 rounded text-xs text-white cursor-move ${
-                        CONTENT_TYPES.find(t => t.id === event.type)?.color || 'bg-gray-500'
-                      }`}
-                    >
-                      <div className="font-medium truncate">{event.title}</div>
-                      <div className="flex items-center gap-1 mt-1">
-                        <select 
-                          className="text-xs bg-white text-gray-700 rounded px-1 py-0.5"
-                          value={event.status}
-                          onChange={(e) => updateEventStatus(event.id, e.target.value)}
-                          onClick={(e) => e.stopPropagation()}
+        </div>
+        <div className="grid grid-cols-7 gap-2">
+          {calendarDays.map((day, index) => (
+            <div 
+              key={index} 
+              className="min-h-[120px] border border-gray-200 rounded-lg p-2 bg-white hover:bg-gray-50 transition-colors"
+              onDragOver={handleDragOver}
+              onDrop={e => day && handleDrop(e, day.toISOString().slice(0, 10))}
+            >
+              {day && (
+                <>
+                  <div className="text-sm font-medium text-gray-700 mb-2">
+                    {day.getDate()}
+                  </div>
+                  <div className="space-y-1">
+                    {events
+                      .filter(ev => ev.date === day.toISOString().slice(0, 10))
+                      .map(ev => (
+                        <div 
+                          key={ev.id}
+                          className={`text-xs p-1 rounded cursor-move ${CONTENT_TYPES.find(t => t.id === ev.type)?.color} text-white`}
+                          draggable
+                          onDragStart={e => handleDragStart(e, ev)}
                         >
-                          <option value="scheduled">Scheduled</option>
-                          <option value="published">Published</option>
-                          <option value="draft">Draft</option>
-                        </select>
-                        <button 
-                          className="text-xs bg-red-500 text-white rounded px-1 py-0.5"
-                          onClick={(e) => { e.stopPropagation(); remove(event.id); }}
-                        >
-                          ×
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+                          <div className="font-medium truncate">{ev.title}</div>
+                          <div className="text-xs opacity-90">{ev.type}</div>
+                        </div>
+                      ))}
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
-      <div className="mt-6 bg-white rounded shadow p-4">
-        <h3 className="font-semibold mb-3">Content Type Legend</h3>
-        <div className="flex flex-wrap gap-3">
-          {CONTENT_TYPES.map(type => (
-            <div key={type.id} className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded ${type.color}`} />
-              <span className="text-sm">{type.label}</span>
+      <div className="mt-8 modern-card p-8">
+        <h3 className="heading-3 mb-6">Scheduled Content</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {events.map(ev => (
+            <div key={ev.id} className="bg-white rounded-xl p-4 border border-gray-200 hover:border-orange-300 transition-all duration-300 shadow-sm hover:shadow-md">
+              <div className="flex items-start justify-between mb-3">
+                <div className={`w-3 h-3 rounded-full ${CONTENT_TYPES.find(t => t.id === ev.type)?.color}`}></div>
+                <button 
+                  className="text-red-500 hover:text-red-700 text-sm"
+                  onClick={() => remove(ev.id)}
+                >
+                  ×
+                </button>
+              </div>
+              <h4 className="font-semibold text-gray-800 mb-2">{ev.title}</h4>
+              <div className="text-sm text-gray-600 mb-3">
+                <div className="flex items-center mb-1">
+                  <span className="w-2 h-2 bg-orange-500 rounded-full mr-2"></span>
+                  {new Date(ev.date).toLocaleDateString()}
+                </div>
+                <div className="flex items-center">
+                  <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                  {ev.type}
+                </div>
+              </div>
+              {ev.description && (
+                <p className="text-sm text-gray-600 mb-3">{ev.description}</p>
+              )}
+              <div className="flex gap-2">
+                <select 
+                  className="text-xs modern-input flex-1" 
+                  value={ev.status} 
+                  onChange={e => updateEventStatus(ev.id, e.target.value)}
+                >
+                  <option value="scheduled">Scheduled</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="published">Published</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
             </div>
           ))}
         </div>
