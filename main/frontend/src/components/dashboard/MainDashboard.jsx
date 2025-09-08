@@ -145,6 +145,7 @@ export default function MainDashboard({ context, onShowGuide }) {
       const isCmdK = (e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k';
       if (isCmdK) {
         e.preventDefault();
+        console.log('Search shortcut triggered');
         setIsSearchOpen(true);
       }
     }
