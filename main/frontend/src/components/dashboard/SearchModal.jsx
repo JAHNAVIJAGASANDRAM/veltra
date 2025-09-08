@@ -1,5 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 
+const gradientByColor = {
+  blue: "from-blue-500 to-blue-600",
+  purple: "from-purple-500 to-purple-600",
+  orange: "from-orange-500 to-orange-600",
+  green: "from-green-500 to-green-600",
+};
+
 export default function SearchModal({ open, onClose, data }) {
   const [query, setQuery] = useState("");
 
@@ -9,7 +16,6 @@ export default function SearchModal({ open, onClose, data }) {
     }
     if (open) {
       window.addEventListener('keydown', onKey);
-      // Focus the input when modal opens
       setTimeout(() => {
         const input = document.querySelector('#search-input');
         if (input) input.focus();
@@ -151,10 +157,11 @@ export default function SearchModal({ open, onClose, data }) {
 }
 
 function ResultGroup({ title, icon, color, items, render }) {
+  const gradient = gradientByColor[color] || gradientByColor.blue;
   return (
     <div className="modern-card p-6">
       <div className="flex items-center mb-4">
-        <div className={`w-8 h-8 bg-gradient-to-r from-${color}-500 to-${color}-600 rounded-lg flex items-center justify-center text-white font-bold text-sm mr-3`}>
+        <div className={`w-8 h-8 bg-gradient-to-r ${gradient} rounded-lg flex items-center justify-center text-white font-bold text-sm mr-3`}>
           {icon}
         </div>
         <h3 className="heading-3">{title}</h3>
