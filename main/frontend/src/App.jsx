@@ -29,7 +29,7 @@ function App() {
           {/* Hero Section */}
           <section id="hero" className="hero-section">
             <div className="hero-content">
-              <h1 className="heading-1 mb-6 animate-fade-in-up">
+              <h1 className="heading-1 hero-heading mb-6 animate-fade-in-up">
                 Your Virtual Office for Seamless Content Creation & Team Collaboration
               </h1>
               <p className="text-xl mb-8 opacity-90 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
