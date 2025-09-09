@@ -89,7 +89,7 @@ function App() {
           {/* Screenshots / Demo Preview Section */}
           <section id="screenshots" className="py-20 px-6 bg-white">
             <div className="max-w-7xl mx-auto">
-              <h2 className="heading-2 text-center mb-16">Screenshots / Demo Preview</h2>
+              <h2 className="heading-2 text-center mb-16"> Preview</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                 <div className="modern-card p-6">
                   <img src="https://via.placeholder.com/400x250?text=Team+Dashboard" alt="Team Dashboard" className="rounded-lg shadow-lg w-full" />
@@ -125,7 +125,7 @@ function App() {
                 </p>
                 <div className="flex items-center justify-center">
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold mr-4">
-                    JD
+                     JD
                   </div>
                   <div className="text-left">
                     <p className="font-semibold">John Doe</p>
