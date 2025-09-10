@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
+import Registration from "./components/Registration";
 import OnboardingWizard from "./components/OnboardingWizard";
 import IndividualDashboard from "./components/IndividualDashboard";
 import TeamDashboard from "./components/TeamDashboard";
@@ -8,7 +9,10 @@ import MainDashboard from "./components/dashboard/MainDashboard";
 import InteractiveGuide from "./components/InteractiveGuide";
 
 function App() {
+  const [showRegistration, setShowRegistration] = useState(false);
   const [showWizard, setShowWizard] = useState(false);
+  //const [showRegistration, setShowRegistration] = useState(false);
+
   const [context, setContext] = useState(null); // null | { type: 'individual'|'team', ... }
   const [showGuide, setShowGuide] = useState(false);
 
@@ -24,10 +28,13 @@ function App() {
   return (
     <div id="top" className="min-h-screen flex flex-col">
       <Navbar />
-      <Hero />
+     
 
       {isHome && (
         <>
+         {/* Hero Section */}
+    <Hero onGetStarted={() => setShowRegistration(true)} />
+
           
 
           {/* Key Features Section */}
@@ -156,6 +163,9 @@ function App() {
           onClose={() => setShowGuide(false)}
         />
       )}
+      {showRegistration && (
+      <Registration onClose={() => setShowRegistration(false)} />
+    )}
     </div>
   );
 }
