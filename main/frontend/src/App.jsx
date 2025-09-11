@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Navbar from "./Navbar";
 import Hero from "./Hero";
+import KeyFeatures from "./components/KeyFeatures";
 import Registration from "./components/Registration";
 import OnboardingWizard from "./components/OnboardingWizard";
 import IndividualDashboard from "./components/IndividualDashboard";
@@ -38,6 +39,7 @@ function App() {
           
 
           {/* Key Features Section */}
+          <KeyFeatures />
           <section id="features" className="py-20 px-6 bg-white">
             <div className="max-w-7xl mx-auto">
               <h2 className="heading-2 text-center mb-16">Key Features</h2>

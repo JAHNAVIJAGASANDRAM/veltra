@@ -20,7 +20,7 @@ export default function InteractiveGuide({ contextType, onClose }) {
     ],
     team: [
       { selector: '#guide-invite', title: 'Invite your first teammate', text: 'Bring your team on board to collaborate.' },
-      { selector: '#guide-first-task', title: 'Create your first task', text: 'Assign a task to kick off your workflow.' },
+      { selector: '#guide-first-task', title: 'Create your first task', text: 'Assign a task to kick off your workflow!.' },
     ]
   };
 
