@@ -21,7 +21,7 @@ export default function Hero({ onGetStarted }) {
               className="px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 hover:scale-105 transition shadow-lg"
               onClick={onGetStarted}
             >
-              Get Started Free
+              Get Started 
             </button>
             <button className="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition shadow-sm">
               Learn More
