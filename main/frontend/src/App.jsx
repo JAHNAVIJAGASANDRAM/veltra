@@ -36,7 +36,25 @@ function App() {
          {/* Hero Section */}
     <Hero onGetStarted={() => setShowRegistration(true)} />
 
-          
+          {/* Hero Section */}
+          <section id="hero" className="hero-section">
+            <div className="hero-content">
+              <h1 className="heading-1 hero-heading mb-6 animate-fade-in-up">
+                Your Virtual Office for Seamless Content Creation & Team Collaboration
+              </h1>
+              <p className="text-xl mb-8 opacity-90 animate-fade-in-up" style={{animationDelay: '0.2s'}}>
+                From idea to publishing — manage tasks, track progress, and create together in one place.
+              </p>
+              <div className="space-x-6 animate-fade-in-up" style={{animationDelay: '0.4s'}}>
+                <button className="btn-primary text-lg px-8 py-4" onClick={() => setShowWizard(true)}>
+                  Get Started
+                </button>
+                <button className="btn-secondary text-lg px-8 py-4" onClick={() => setShowGuide(true)}>
+                  See Demo
+                </button>
+              </div>
+            </div>
+          </section>
 
           {/* Key Features Section */}
           <KeyFeatures />
