@@ -1,45 +1,46 @@
-export default function Hero({ onGetStarted }) {
+import React from "react";
+
+function Hero({ onGetStarted, onWizard, onGuide }) {
   return (
-    <section
-      id="top"
-      className="relative bg-gradient-to-b from-blue-50 to-white pt-32 pb-20"
-    >
-      <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
-        
-        {/* Left Content */}
-        <div className="text-center lg:text-left space-y-6">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight">
-            Build Smarter, Faster with{" "}
-            <span className="text-blue-600">Veltra</span>
-          </h1>
-          <p className="text-lg text-gray-600 max-w-xl mx-auto lg:mx-0">
-            Veltra helps you manage, publish, and grow your content with ease.
-            Designed for speed, simplicity, and scalability.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-            <button
-              className="px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 hover:scale-105 transition shadow-lg"
-              onClick={onGetStarted}
-            >
-              Get Started 
-            </button>
-            <button className="px-6 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-100 transition shadow-sm">
-              Learn More
-            </button>
-          </div>
+    <section id="hero" className="hero-section py-20 px-6 bg-gray-50">
+      <div className="max-w-7xl mx-auto text-center">
+        {/* Main Heading */}
+        <h1 className="text-4xl md:text-6xl font-bold mb-6">
+          Your Virtual Office for Seamless Content Creation & Team Collaboration
+        </h1>
+
+        {/* Subheading */}
+        <p className="text-xl md:text-2xl text-gray-600 mb-8">
+          From idea to publishing — manage tasks, track progress, and create together in one place.
+        </p>
+
+        {/* Call-to-Action Buttons */}
+        <div className="flex justify-center gap-6">
+          <button
+            className="btn-primary px-8 py-4 text-lg"
+            onClick={onGetStarted}
+          >
+            Get Started
+          </button>
+          <button
+            className="btn-secondary px-8 py-4 text-lg"
+            onClick={onGuide}
+          >
+            See Demo
+          </button>
         </div>
 
-        {/* Right Side Image */}
-        <div className="relative">
+        {/* Optional: Animated Illustration or Screenshot */}
+        <div className="mt-12">
           <img
-            src="/hero-illustration.svg"
-            alt="Veltra Dashboard"
-            className="w-full max-w-lg mx-auto drop-shadow-2xl rounded-2xl"
+            src="https://via.placeholder.com/800x400?text=Veltra+Dashboard+Preview"
+            alt="Veltra Preview"
+            className="rounded-lg shadow-lg mx-auto"
           />
-          <div className="absolute -z-10 top-10 left-10 w-72 h-72 bg-blue-200 blur-3xl rounded-full opacity-40"></div>
-          <div className="absolute -z-10 bottom-10 right-10 w-72 h-72 bg-purple-200 blur-3xl rounded-full opacity-40"></div>
         </div>
       </div>
     </section>
   );
 }
+
+export default Hero;
