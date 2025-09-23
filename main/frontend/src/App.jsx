@@ -12,6 +12,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ContentPage from "./pages/ContentPage";
 
 function App() {
+  // Modal states
   const [showRegistration, setShowRegistration] = useState(false);
   const [showWizard, setShowWizard] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
@@ -19,6 +20,8 @@ function App() {
   return (
     <Router>
       <Navbar />
+
+      
 
       {/* Page Routes */}
       <Routes>
@@ -38,11 +41,22 @@ function App() {
 
       {/* Modals */}
       {showRegistration && (
-        <Registration onClose={() => setShowRegistration(false)} />
+        <Registration
+          onClose={() => setShowRegistration(false)}
+          onContinue={() => {
+            setShowRegistration(false); // close registration
+            setShowWizard(true); // open onboarding wizard
+          }}
+        />
       )}
+
       {showWizard && (
-        <OnboardingWizard onClose={() => setShowWizard(false)} />
+        <OnboardingWizard
+          onClose={() => setShowWizard(false)}
+          onComplete={() => setShowWizard(false)}
+        />
       )}
+
       {showGuide && (
         <InteractiveGuide onClose={() => setShowGuide(false)} />
       )}
