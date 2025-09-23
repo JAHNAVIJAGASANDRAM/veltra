@@ -1,26 +1,13 @@
-import React from "react";
-import Sidebar from "../components/dashboard/Sidebar";
-import Topbar from "../components/dashboard/Topbar";
-import StatsOverview from "../components/dashboard/StatsOverview";
-import RecentActivity from "../components/dashboard/RecentActivity";
-import TaskList from "../components/dashboard/TaskList";
+import TeamDashboard from "../components/TeamDashboard";
+import IndividualDashboard from "../components/IndividualDashboard";
 
-function DashboardPage() {
-  return (
-    <div className="flex">
-      {/* Sidebar */}
-      <Sidebar />
+function DashboardPage({ workspaceData, onShowGuide }) {
+  if (!workspaceData) return <div className="p-6 text-center">No workspace found. Please complete onboarding.</div>;
 
-      {/* Main Content */}
-      <div className="flex-1 bg-gray-100 min-h-screen">
-        <Topbar />
-        <div className="p-6">
-          <StatsOverview />
-          <RecentActivity />
-          <TaskList />
-        </div>
-      </div>
-    </div>
+  return workspaceData.type === "team" ? (
+    <TeamDashboard team={workspaceData.team} onShowGuide={onShowGuide} />
+  ) : (
+    <IndividualDashboard onShowGuide={onShowGuide} />
   );
 }
 

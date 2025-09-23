@@ -1,75 +1,80 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import Navbar from "./Navbar";
 import Registration from "./components/Registration";
 import OnboardingWizard from "./components/OnboardingWizard";
 import InteractiveGuide from "./components/InteractiveGuide";
 
-// Pages
 import HomePage from "./pages/HomePage";
-import DashboardPage from "./pages/DashboardPage";
-import ContentPage from "./pages/ContentPage";
-
-function AppWrapper() {
-  return (
-    <Router>
-      <App />
-    </Router>
-  );
-}
+import IndividualDashboard from "./components/IndividualDashboard";
+import TeamDashboard from "./components/TeamDashboard";
 
 function App() {
-  const navigate = useNavigate();
-
+  // Modal states
   const [showRegistration, setShowRegistration] = useState(false);
   const [showWizard, setShowWizard] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
 
+  // Store workspace data
+  const [workspaceData, setWorkspaceData] = useState(null);
+
+  const handleRegistrationContinue = () => {
+    setShowRegistration(false);
+    setShowWizard(true);
+  };
+
+  const handleWizardComplete = (data) => {
+    setWorkspaceData(data);  // Save the workspace info
+    setShowWizard(false);
+  };
+
+  const handleShowGuide = () => setShowGuide(true);
+
   return (
-    <>
+    <Router>
       <Navbar />
 
-      {/* Page Routes */}
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <HomePage
-              onShowRegistration={() => setShowRegistration(true)}
-              onShowWizard={() => setShowWizard(true)}
-              onShowGuide={() => setShowGuide(true)}
-            />
-          }
+      {/* Conditionally render dashboard if workspace exists */}
+      {workspaceData ? (
+        workspaceData.type === "individual" ? (
+          <IndividualDashboard
+            onShowGuide={handleShowGuide}
+          />
+        ) : (
+          <TeamDashboard
+            team={workspaceData.team}
+            onShowGuide={handleShowGuide}
+          />
+        )
+      ) : (
+        // Otherwise show HomePage
+        <HomePage
+          onShowRegistration={() => setShowRegistration(true)}
         />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/content" element={<ContentPage />} />
-      </Routes>
+      )}
 
       {/* Modals */}
       {showRegistration && (
         <Registration
           onClose={() => setShowRegistration(false)}
-          onContinue={() => {
-            setShowRegistration(false);
-            setShowWizard(true);
-          }}
+          onContinue={handleRegistrationContinue}
         />
       )}
-
       {showWizard && (
         <OnboardingWizard
           onClose={() => setShowWizard(false)}
-          onComplete={() => {
-            setShowWizard(false);
-            navigate("/dashboard"); // <--- Go to dashboard after completion
-          }}
+          onComplete={handleWizardComplete}
         />
       )}
-
-      {showGuide && <InteractiveGuide onClose={() => setShowGuide(false)} />}
-    </>
+      {showGuide && (
+        <InteractiveGuide
+          contextType={workspaceData?.type === "team" ? "team" : "individual"}
+          onClose={() => setShowGuide(false)}
+        />
+      )}
+    </Router>
   );
 }
 
-export default AppWrapper;
+export default App;
