@@ -12,14 +12,12 @@ import DashboardPage from "./pages/DashboardPage";
 import ContentPage from "./pages/ContentPage";
 
 function App() {
-  // Modal states
   const [showRegistration, setShowRegistration] = useState(false);
   const [showWizard, setShowWizard] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
 
   return (
     <Router>
-      {/* Navbar always visible */}
       <Navbar />
 
       {/* Page Routes */}
