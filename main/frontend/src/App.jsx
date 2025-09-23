@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 
 import Navbar from "./Navbar";
 import Registration from "./components/Registration";
@@ -11,17 +11,24 @@ import HomePage from "./pages/HomePage";
 import DashboardPage from "./pages/DashboardPage";
 import ContentPage from "./pages/ContentPage";
 
+function AppWrapper() {
+  return (
+    <Router>
+      <App />
+    </Router>
+  );
+}
+
 function App() {
-  // Modal states
+  const navigate = useNavigate();
+
   const [showRegistration, setShowRegistration] = useState(false);
   const [showWizard, setShowWizard] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
 
   return (
-    <Router>
+    <>
       <Navbar />
-
-      
 
       {/* Page Routes */}
       <Routes>
@@ -44,8 +51,8 @@ function App() {
         <Registration
           onClose={() => setShowRegistration(false)}
           onContinue={() => {
-            setShowRegistration(false); // close registration
-            setShowWizard(true); // open onboarding wizard
+            setShowRegistration(false);
+            setShowWizard(true);
           }}
         />
       )}
@@ -53,15 +60,16 @@ function App() {
       {showWizard && (
         <OnboardingWizard
           onClose={() => setShowWizard(false)}
-          onComplete={() => setShowWizard(false)}
+          onComplete={() => {
+            setShowWizard(false);
+            navigate("/dashboard"); // <--- Go to dashboard after completion
+          }}
         />
       )}
 
-      {showGuide && (
-        <InteractiveGuide onClose={() => setShowGuide(false)} />
-      )}
-    </Router>
+      {showGuide && <InteractiveGuide onClose={() => setShowGuide(false)} />}
+    </>
   );
 }
 
-export default App;
+export default AppWrapper;
