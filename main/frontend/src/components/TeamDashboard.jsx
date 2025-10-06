@@ -3,9 +3,11 @@ import KanbanBoard from "./dashboard/KanbanBoard";
 import ContentHub from "./dashboard/ContentHub";
 import ResearchAnalysis from "./dashboard/ResearchAnalysis";
 import PublishingCalendar from "./dashboard/PublishingCalendar";
+import CustomWorkflowBuilder from "./dashboard/CustomWorkflowBuilder";
+import ActivityFeed from "./dashboard/ActivityFeed";
 
 export default function TeamDashboard({ team, onShowGuide }) {
-  const [activeModule, setActiveModule] = useState(null); // 'tasks', 'research', 'draft', 'calendar'
+  const [activeModule, setActiveModule] = useState(null); // 'tasks', 'research', 'draft', 'calendar', 'workflow'
 
   // Shared state for modules
   const [tasks, setTasks] = useState([]);
@@ -13,9 +15,16 @@ export default function TeamDashboard({ team, onShowGuide }) {
   const [drafts, setDrafts] = useState([]);
   const [resources, setResources] = useState([]);
   const [events, setEvents] = useState([]);
+  const [workflows, setWorkflows] = useState([]);
+
+  // Activity feed state
+  const [activity, setActivity] = useState([]);
 
   const handleActivity = (event) => {
     console.log("Activity Event:", event);
+    // Add timestamp if missing
+    if (!event.ts) event.ts = Date.now();
+    setActivity(prev => [event, ...prev]);
   };
 
   const renderModule = () => {
@@ -57,6 +66,14 @@ export default function TeamDashboard({ team, onShowGuide }) {
             onActivity={handleActivity}
           />
         );
+      case "workflow":
+        return (
+          <CustomWorkflowBuilder
+            workflows={workflows}
+            setWorkflows={setWorkflows}
+            onActivity={handleActivity}
+          />
+        );
       default:
         return null;
     }
@@ -76,50 +93,52 @@ export default function TeamDashboard({ team, onShowGuide }) {
         </button>
       </header>
 
-      <main className="p-8 grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
+      {/* Dashboard Cards */}
+      <main className="p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
         <div className="modern-card p-8">
           <h2 className="heading-3 mb-2">Task Board</h2>
-          <button
-            className="btn-primary"
-            onClick={() => setActiveModule("tasks")}
-          >
+          <button className="btn-primary w-full" onClick={() => setActiveModule("tasks")}>
             Open Task Board
           </button>
         </div>
 
         <div className="modern-card p-8">
           <h2 className="heading-3 mb-2">Research Hub</h2>
-          <button
-            className="btn-primary"
-            onClick={() => setActiveModule("research")}
-          >
+          <button className="btn-primary w-full" onClick={() => setActiveModule("research")}>
             Open Research Hub
           </button>
         </div>
 
         <div className="modern-card p-8">
           <h2 className="heading-3 mb-2">Draft / Approval Pipeline</h2>
-          <button
-            className="btn-primary"
-            onClick={() => setActiveModule("draft")}
-          >
+          <button className="btn-primary w-full" onClick={() => setActiveModule("draft")}>
             Open Pipeline
           </button>
         </div>
 
         <div className="modern-card p-8">
           <h2 className="heading-3 mb-2">Publishing Calendar</h2>
-          <button
-            className="btn-primary"
-            onClick={() => setActiveModule("calendar")}
-          >
+          <button className="btn-primary w-full" onClick={() => setActiveModule("calendar")}>
             Open Calendar
+          </button>
+        </div>
+
+        <div className="modern-card p-8">
+          <h2 className="heading-3 mb-2">Custom Workflows</h2>
+          <button className="btn-primary w-full" onClick={() => setActiveModule("workflow")}>
+            Open Workflow Builder
           </button>
         </div>
       </main>
 
-      {/* Render the selected module */}
+      {/* Render Selected Module */}
       <div className="p-8 max-w-7xl mx-auto">{renderModule()}</div>
+
+      {/* Activity Feed */}
+      <div className="p-8 max-w-7xl mx-auto mt-8">
+        <h2 className="heading-3 mb-4">Activity Feed</h2>
+        <ActivityFeed items={activity} />
+      </div>
     </div>
   );
 }
