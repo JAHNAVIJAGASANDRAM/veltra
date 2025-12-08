@@ -15,6 +15,24 @@ import EnhancedNotifications from "./EnhancedNotifications";
 const STORAGE_KEY = "veltra_state_v1";
 
 export default function MainDashboard({ context, onShowGuide }) {
+  // Read logged-in user from localStorage
+const loggedUser = JSON.parse(localStorage.getItem("user"));
+
+// If no login → block the dashboard
+if (!loggedUser) {
+  return (
+    <div className="p-10 text-center text-xl font-semibold">
+      Please login first.
+    </div>
+  );
+}
+
+// Determine workspace title based on role
+const workspaceTitle =
+  loggedUser.role === "team"
+    ? loggedUser.teamName || "Team Workspace"
+    : "Creator Workspace";
+
   const [activeTab, setActiveTab] = useState("overview");
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isInitialized, setIsInitialized] = useState(true); // Start as initialized
@@ -162,7 +180,8 @@ export default function MainDashboard({ context, onShowGuide }) {
     <div className="flex-1 relative dashboard-content main-content">
       <header className="modern-header px-8 py-6 flex items-center justify-between">
         <div>
-          <h1 className="heading-2 mb-2">{context?.type === "team" ? (team?.name || "Team Workspace") : "Creator Workspace"}</h1>
+          <h1 className="heading-2 mb-2">{workspaceTitle}</h1>
+
           <p className="text-gray-600 text-lg">Welcome back{context?.user?.name ? `, ${context.user.name}` : ""}.</p>
         </div>
         <div className="flex items-center gap-4">

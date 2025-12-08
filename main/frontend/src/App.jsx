@@ -1,79 +1,102 @@
-import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 import Navbar from "./Navbar";
+import HomePage from "./pages/HomePage";
+import Login from "./pages/Login";
+import MainDashboard from "./components/dashboard/MainDashboard";
 import Registration from "./components/Registration";
 import OnboardingWizard from "./components/OnboardingWizard";
 import InteractiveGuide from "./components/InteractiveGuide";
 
-import HomePage from "./pages/HomePage";
-import IndividualDashboard from "./components/IndividualDashboard";
-import TeamDashboard from "./components/TeamDashboard";
-
 function App() {
-  // Modal states
   const [showRegistration, setShowRegistration] = useState(false);
   const [showWizard, setShowWizard] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
-
-  // Store workspace data
   const [workspaceData, setWorkspaceData] = useState(null);
 
+  const navigate = useNavigate();
+
+  // ✔ Load workspace from localStorage (for refresh)
+  useEffect(() => {
+    const saved = localStorage.getItem("veltra_workspace");
+    if (saved) {
+      setWorkspaceData(JSON.parse(saved));
+    }
+  }, []);
+
+  // ✔ Store workspace for persistence
+  useEffect(() => {
+    if (workspaceData) {
+      localStorage.setItem("veltra_workspace", JSON.stringify(workspaceData));
+    }
+  }, [workspaceData]);
+
+  // ✔ After Registration → open Wizard
   const handleRegistrationContinue = () => {
     setShowRegistration(false);
     setShowWizard(true);
   };
 
+  // ✔ After Wizard → save data → go to dashboard
   const handleWizardComplete = (data) => {
-    setWorkspaceData(data);  // Save the workspace info
+    setWorkspaceData(data);
     setShowWizard(false);
+    navigate("/dashboard");
   };
 
-  const handleShowGuide = () => setShowGuide(true);
-
   return (
-    <Router>
+    <>
       <Navbar />
 
-      {/* Conditionally render dashboard if workspace exists */}
-      {workspaceData ? (
-        workspaceData.type === "individual" ? (
-          <IndividualDashboard
-            onShowGuide={handleShowGuide}
-          />
-        ) : (
-          <TeamDashboard
-            team={workspaceData.team}
-            onShowGuide={handleShowGuide}
-          />
-        )
-      ) : (
-        // Otherwise show HomePage
-        <HomePage
-          onShowRegistration={() => setShowRegistration(true)}
+      <Routes>
+        <Route
+          path="/"
+          element={<HomePage onShowRegistration={() => setShowRegistration(true)} />}
         />
-      )}
 
-      {/* Modals */}
+        <Route path="/login" element={<Login />} />
+
+        <Route
+          path="/dashboard"
+          element={
+            workspaceData ? (
+              <MainDashboard
+                context={workspaceData}
+                onShowGuide={() => setShowGuide(true)}
+              />
+            ) : (
+              <div className="p-10 text-center text-xl">
+                Please login or complete onboarding
+              </div>
+            )
+          }
+        />
+      </Routes>
+
+      {/* ---------------- MODALS ---------------- */}
+
       {showRegistration && (
         <Registration
           onClose={() => setShowRegistration(false)}
           onContinue={handleRegistrationContinue}
         />
       )}
+
       {showWizard && (
         <OnboardingWizard
           onClose={() => setShowWizard(false)}
           onComplete={handleWizardComplete}
         />
       )}
-      {showGuide && (
+
+      {showGuide && workspaceData && (
         <InteractiveGuide
-          contextType={workspaceData?.type === "team" ? "team" : "individual"}
+          contextType={workspaceData.type}
           onClose={() => setShowGuide(false)}
         />
       )}
-    </Router>
+    </>
   );
 }
 
