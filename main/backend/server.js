@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import connectDB from "./config/db.js";
 
 // Import routes
 import authRoutes from './routes/auth.js';
@@ -19,6 +20,8 @@ import { authenticateToken } from './middleware/auth.js';
 
 // Load environment variables
 dotenv.config();
+
+connectDB();
 
 const app = express();
 const httpServer = createServer(app);
