@@ -21,7 +21,7 @@ import { authenticateToken } from './middleware/auth.js';
 // Load environment variables
 dotenv.config();
 
-connectDB();
+
 
 const app = express();
 const httpServer = createServer(app);
@@ -89,17 +89,7 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Database connection
-const connectDB = async () => {
-  try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/veltra';
-    await mongoose.connect(mongoURI);
-    console.log('MongoDB connected successfully');
-  } catch (error) {
-    console.error('MongoDB connection error:', error);
-    process.exit(1);
-  }
-};
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
