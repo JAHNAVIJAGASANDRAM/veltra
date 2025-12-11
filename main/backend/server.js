@@ -1,7 +1,9 @@
+
+import "./config/loadEnv.js";
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
+
 import mongoose from 'mongoose';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -19,7 +21,7 @@ import analyticsRoutes from './routes/analytics.js';
 import { authenticateToken } from './middleware/auth.js';
 
 // Load environment variables
-dotenv.config();
+
 
 
 
