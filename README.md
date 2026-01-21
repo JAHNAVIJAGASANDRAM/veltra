@@ -3,7 +3,7 @@
 
 Fuel your content flow.
 
-Veltra is a collaborative workspace designed to streamline content creation workflows. It helps teams manage tasks, track progress, and work together more efficiently — from planning to publishing.
+Veltra is a collaborative workspace designed to streamline content creation workflows. It helps teams manage tasks, track progress, and work together more efficiently .From planning to publishing.
 
 > ⚠️ This project is currently under active development. More details will be added soon.
 
