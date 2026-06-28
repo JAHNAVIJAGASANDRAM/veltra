@@ -1,7 +1,26 @@
 {
-  "devDependencies": {
-    "autoprefixer": "^10.4.21",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.11"
+  "name": "veltra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Veltra Secure Collaborative Workspace monorepo.",
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces --if-present",
+    "dev": "npm run dev --workspace @veltra/api",
+    "dev:api": "npm run dev --workspace @veltra/api",
+    "dev:web": "npm run dev --workspace @veltra/web",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "compose:up": "docker compose up --build",
+    "compose:down": "docker compose down --remove-orphans"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=10.0.0"
   }
 }
