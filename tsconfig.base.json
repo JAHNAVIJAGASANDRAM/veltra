@@ -10,6 +10,12 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "baseUrl": ".",
+    "paths": {
+      "@veltra/config": ["packages/config/src/index.ts"],
+      "@veltra/contracts": ["packages/contracts/src/index.ts"],
+      "@veltra/security": ["packages/security/src/index.ts"]
+    }
   }
 }

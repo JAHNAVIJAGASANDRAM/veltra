@@ -9,13 +9,13 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build --workspaces --if-present",
-    "dev": "npm run dev --workspace @veltra/api",
-    "dev:api": "npm run dev --workspace @veltra/api",
-    "dev:web": "npm run dev --workspace @veltra/web",
-    "lint": "npm run lint --workspaces --if-present",
-    "test": "npm run test --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present",
+    "build": "pnpm -r --if-present run build",
+    "dev": "pnpm --filter @veltra/api run dev",
+    "dev:api": "pnpm --filter @veltra/api run dev",
+    "dev:web": "pnpm --filter @veltra/web run dev",
+    "lint": "pnpm -r --if-present run lint",
+    "test": "pnpm -r --if-present run test",
+    "typecheck": "pnpm -r --if-present run typecheck",
     "compose:up": "docker compose up --build",
     "compose:down": "docker compose down --remove-orphans"
   },
