@@ -5,6 +5,11 @@ services:
       dockerfile: infra/docker/api.Dockerfile
     env_file:
       - .env
+    environment:
+      DATABASE_URL: postgresql://veltra:veltra_dev_password@postgres:5432/veltra
+      REDIS_URL: redis://redis:6379
+      S3_ENDPOINT: http://minio:9000
+      PUBLIC_WEB_ORIGIN: http://localhost:8080
     depends_on:
       postgres:
         condition: service_healthy
@@ -71,7 +76,11 @@ services:
     volumes:
       - minio_data:/data
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test:
+        [
+          "CMD-SHELL",
+          "mc alias set local http://localhost:9000 veltra veltra_dev_secret >/dev/null 2>&1 && mc ready local"
+        ]
       interval: 10s
       timeout: 5s
       retries: 5

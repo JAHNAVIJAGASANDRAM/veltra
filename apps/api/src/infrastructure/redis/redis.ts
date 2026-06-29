@@ -3,7 +3,11 @@ import { appConfig } from "../../config/app-config.js";
 import { logger } from "../../shared/logging/logger.js";
 
 export const redisClient = createClient({
-  url: appConfig.REDIS_URL
+  url: appConfig.REDIS_URL,
+  socket: {
+    connectTimeout: 2000,
+    reconnectStrategy: false
+  }
 });
 
 redisClient.on("error", (error) => {

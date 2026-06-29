@@ -1,17 +1,23 @@
 FROM node:22-alpine AS base
 WORKDIR /app
 
-COPY package.json package-lock.json* tsconfig.base.json ./
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
 COPY apps/api/package.json apps/api/package.json
 COPY apps/web/package.json apps/web/package.json
 COPY packages/config/package.json packages/config/package.json
 COPY packages/contracts/package.json packages/contracts/package.json
 COPY packages/security/package.json packages/security/package.json
 
-RUN npm install
+RUN pnpm install --frozen-lockfile
+
+RUN apk add --no-cache wget
 
 COPY . .
-RUN npm run build --workspace @veltra/api
+RUN pnpm --filter @veltra/config run build \
+  && pnpm --filter @veltra/contracts run build \
+  && pnpm --filter @veltra/api run build
 
 EXPOSE 5000
-CMD ["npm", "run", "start", "--workspace", "@veltra/api"]
+CMD ["pnpm", "--filter", "@veltra/api", "run", "start"]
