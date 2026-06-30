@@ -41,7 +41,7 @@ systemRouter.get("/api/v1/system/info", (_req, res) => {
     name: "Veltra",
     version: "0.1.0",
     environment: appConfig.NODE_ENV,
-    securityPosture: "foundation"
+    securityPosture: "identity"
   };
 
   res.status(200).json(response);

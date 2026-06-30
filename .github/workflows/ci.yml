@@ -10,6 +10,31 @@ jobs:
   verify:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: veltra
+          POSTGRES_USER: veltra
+          POSTGRES_PASSWORD: veltra_dev_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U veltra -d veltra"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -32,6 +57,19 @@ jobs:
         run: pnpm typecheck
 
       - name: Test
+        env:
+          RUN_INTEGRATION_TESTS: "true"
+          NODE_ENV: test
+          DATABASE_URL: postgresql://veltra:veltra_dev_password@localhost:5432/veltra
+          REDIS_URL: redis://localhost:6379
+          S3_ENDPOINT: http://localhost:9000
+          S3_REGION: us-east-1
+          S3_BUCKET: veltra-files
+          S3_ACCESS_KEY: veltra
+          S3_SECRET_KEY: veltra_dev_secret
+          COOKIE_SECRET: "12345678901234567890123456789012"
+          JWT_PRIVATE_KEY_B64: ZGV2LXByaXZhdGUtanN0LXRlc3Qta2V5
+          JWT_PUBLIC_KEY_B64: ZGV2LXB1YmxpYy1qd3QtdGVzdC1rZXk=
         run: pnpm test
 
       - name: Build

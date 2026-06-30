@@ -3,15 +3,14 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
-COPY apps/web/package.json apps/web/package.json
-COPY packages/contracts/package.json packages/contracts/package.json
-
-RUN pnpm install --frozen-lockfile
-
 COPY . .
-RUN pnpm --filter @veltra/contracts run build \
-  && pnpm --filter @veltra/web run build
+
+ENV PATH="/app/node_modules/.bin:${PATH}"
+
+RUN pnpm install --frozen-lockfile \
+  && tsc -p packages/contracts/tsconfig.json \
+  && tsc -b apps/web/tsconfig.json \
+  && pnpm --filter @veltra/web exec vite build
 
 FROM nginx:1.27-alpine
 COPY infra/nginx/web.conf /etc/nginx/conf.d/default.conf

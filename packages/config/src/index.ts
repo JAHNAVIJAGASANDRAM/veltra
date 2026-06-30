@@ -18,6 +18,12 @@ const environmentSchema = z.object({
   COOKIE_SECRET: z.string().min(32),
   JWT_PRIVATE_KEY_B64: z.string().min(1),
   JWT_PUBLIC_KEY_B64: z.string().min(1),
+  EMAIL_FROM: z.string().email().default("noreply@veltra.local"),
+  EMAIL_VERIFICATION_TTL_SECONDS: z.coerce.number().int().positive().default(86400),
+  PASSWORD_RESET_TTL_SECONDS: z.coerce.number().int().positive().default(3600),
+  MFA_ISSUER: z.string().min(1).default("Veltra"),
+  AUTH_RATE_LIMIT_WINDOW_MS: z.coerce.number().int().positive().default(900000),
+  AUTH_RATE_LIMIT_MAX: z.coerce.number().int().positive().default(20),
   LOG_LEVEL: z.enum(["fatal", "error", "warn", "info", "debug", "trace"]).default("info"),
   REQUEST_ID_HEADER: z.string().min(1).default("x-request-id")
 });

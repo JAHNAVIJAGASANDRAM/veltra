@@ -26,3 +26,24 @@ export const baselineSecurityControls: SecurityControl[] = [
   "risk-scoring",
   "threat-detection"
 ];
+
+export { hashPassword, verifyPassword } from "./password.js";
+export {
+  generateSecureToken,
+  hashToken,
+  buildDeviceFingerprint,
+  deriveDeviceName
+} from "./tokens.js";
+export {
+  decodePemFromBase64,
+  loadJwtKeyPair,
+  signAccessToken,
+  verifyAccessToken,
+  type AccessTokenClaims,
+  type JwtKeyPair
+} from "./jwt.js";
+export {
+  buildTotpUri,
+  generateTotpSecret,
+  verifyTotpCode
+} from "./totp.js";
